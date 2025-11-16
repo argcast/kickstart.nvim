@@ -12,6 +12,9 @@ vim.opt.shiftwidth = 2     -- Number of spaces to use for each step of (auto)ind
 vim.opt.softtabstop = 2    -- Number of spaces that a <Tab> counts for while editing
 vim.opt.expandtab = true   -- Use spaces instead of tabs
 
+-- Use terminal colors instead of themed colorscheme
+vim.cmd.colorscheme 'default'
+
 return {
   -- Auto-closing HTML/JSX tags
   {
