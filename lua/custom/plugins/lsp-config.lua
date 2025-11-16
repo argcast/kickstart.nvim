@@ -26,6 +26,23 @@ return {
     },
   },
 
+  -- Configure conform.nvim to use prettier for TypeScript/JavaScript
+  {
+    'stevearc/conform.nvim',
+    opts = {
+      formatters_by_ft = {
+        javascript = { 'prettier' },
+        typescript = { 'prettier' },
+        javascriptreact = { 'prettier' },
+        typescriptreact = { 'prettier' },
+        json = { 'prettier' },
+        html = { 'prettier' },
+        css = { 'prettier' },
+        markdown = { 'prettier' },
+      },
+    },
+  },
+
   -- Configure Treesitter for additional languages
   {
     'nvim-treesitter/nvim-treesitter',
