@@ -717,13 +717,12 @@ require('lazy').setup({
         'stylua', -- Used to format Lua code
         'prettier', -- Used to format web files (JS, TS, HTML, CSS, JSON, etc.)
         'eslint_d', -- Fast ESLint for JavaScript/TypeScript
-        'typescript-language-server', -- TypeScript/JavaScript LSP
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       require('mason-lspconfig').setup {
-        ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
-        automatic_installation = false,
+        ensure_installed = vim.tbl_keys(servers or {}), -- Install LSPs configured in servers table
+        automatic_installation = true, -- Automatically install LSPs
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
