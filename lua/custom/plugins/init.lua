@@ -68,6 +68,11 @@ return {
   {
     'f-person/git-blame.nvim',
     event = 'VeryLazy',
+    keys = {
+      { '<leader>bo', '<cmd>GitBlameOpenCommitURL<cr>', desc = '[B]lame [O]pen commit in browser' },
+      { '<leader>bc', '<cmd>GitBlameCopySHA<cr>', desc = '[B]lame [C]opy SHA' },
+      { '<leader>bs', '<cmd>GitBlameOpenFileURL<cr>', desc = '[B]lame open file in browser' },
+    },
     opts = {
       enabled = true,
       message_template = ' <summary> • <date> • <author> • <<sha>>',
