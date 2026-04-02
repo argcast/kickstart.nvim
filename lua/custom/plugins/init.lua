@@ -6,6 +6,14 @@
 -- Custom keybindings
 vim.keymap.set('i', 'jk', '<Esc>', { desc = 'Exit insert mode easily' })
 
+-- Auto-reload files changed externally (e.g. by Claude Code, git, etc.)
+vim.opt.autoread = true
+vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter', 'CursorHold' }, {
+  callback = function()
+    vim.cmd 'silent! checktime'
+  end,
+})
+
 -- Set consistent tab/indent settings (2 spaces)
 vim.opt.tabstop = 2 -- Number of spaces that a <Tab> in the file counts for
 vim.opt.shiftwidth = 2 -- Number of spaces to use for each step of (auto)indent
@@ -21,6 +29,13 @@ vim.api.nvim_create_autocmd('ColorScheme', {
     vim.api.nvim_set_hl(0, 'NormalNC', { bg = 'NONE', ctermbg = 'NONE' })
     vim.api.nvim_set_hl(0, 'SignColumn', { bg = 'NONE', ctermbg = 'NONE' })
     vim.api.nvim_set_hl(0, 'EndOfBuffer', { bg = 'NONE', ctermbg = 'NONE' })
+    -- Gitsigns: ensure colored signs are visible with transparent bg
+    vim.api.nvim_set_hl(0, 'GitSignsAdd', { fg = '#b8e6a0', bg = 'NONE' })
+    vim.api.nvim_set_hl(0, 'GitSignsChange', { fg = '#a8c8ff', bg = 'NONE' })
+    vim.api.nvim_set_hl(0, 'GitSignsDelete', { fg = '#ff9ea8', bg = 'NONE' })
+    -- Line numbers: brighter for visibility on transparent bg
+    vim.api.nvim_set_hl(0, 'LineNr', { fg = '#8893a8', bg = 'NONE' })
+    vim.api.nvim_set_hl(0, 'CursorLineNr', { fg = '#e0e0e0', bold = true, bg = 'NONE' })
     -- Neo-tree specific transparency
     vim.api.nvim_set_hl(0, 'NeoTreeNormal', { bg = 'NONE', ctermbg = 'NONE' })
     vim.api.nvim_set_hl(0, 'NeoTreeNormalNC', { bg = 'NONE', ctermbg = 'NONE' })

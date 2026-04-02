@@ -9,6 +9,7 @@ return {
       -- Add TypeScript/JavaScript LSP
       local servers = opts.servers or {}
       servers.ts_ls = {}
+      servers.pyright = {}
       opts.servers = servers
       return opts
     end,
@@ -22,6 +23,7 @@ return {
         'typescript-language-server', -- TypeScript/JavaScript LSP
         'prettier', -- Formatter for web files
         'eslint_d', -- Fast ESLint
+        'pyright', -- Python LSP
       },
     },
   },

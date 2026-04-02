@@ -275,12 +275,14 @@ require('lazy').setup({
     'lewis6991/gitsigns.nvim',
     opts = {
       signs = {
-        add = { text = '+' },
-        change = { text = '~' },
+        add = { text = '│' },
+        change = { text = '│' },
         delete = { text = '_' },
         topdelete = { text = '‾' },
         changedelete = { text = '~' },
       },
+      signcolumn = true,
+      numhl = true,
     },
   },
 
@@ -683,6 +685,8 @@ require('lazy').setup({
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
         --
+
+        pyright = {},
 
         lua_ls = {
           -- cmd = { ... },
