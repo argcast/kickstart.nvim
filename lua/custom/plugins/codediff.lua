@@ -1,4 +1,1 @@
-return {
-  'esmuellert/codediff.nvim',
-  cmd = 'CodeDiff',
-}
+vim.pack.add { 'https://github.com/esmuellert/codediff.nvim' }

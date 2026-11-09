@@ -1,127 +1,71 @@
--- You can add your own plugins here or in other files in this directory!
---  I promise not to create any merge conflicts in this directory :)
---
--- See the kickstart.nvim README for more information
-
--- Custom keybindings
 vim.keymap.set('i', 'jk', '<Esc>', { desc = 'Exit insert mode easily' })
 
--- Auto-reload files changed externally (e.g. by Claude Code, git, etc.)
+-- Reload files changed externally (e.g. by Claude Code, git)
 vim.opt.autoread = true
 vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter', 'CursorHold' }, {
-  callback = function()
-    vim.cmd 'silent! checktime'
-  end,
+  callback = function() vim.cmd 'silent! checktime' end,
 })
 
--- Set consistent tab/indent settings (2 spaces)
-vim.opt.tabstop = 2 -- Number of spaces that a <Tab> in the file counts for
-vim.opt.shiftwidth = 2 -- Number of spaces to use for each step of (auto)indent
-vim.opt.softtabstop = 2 -- Number of spaces that a <Tab> counts for while editing
-vim.opt.expandtab = true -- Use spaces instead of tabs
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.softtabstop = 2
+vim.opt.expandtab = true
 
--- Make background transparent after colorscheme loads
-vim.api.nvim_create_autocmd('ColorScheme', {
-  pattern = '*',
-  callback = function()
-    vim.api.nvim_set_hl(0, 'Normal', { bg = 'NONE', ctermbg = 'NONE' })
-    vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'NONE', ctermbg = 'NONE' })
-    vim.api.nvim_set_hl(0, 'NormalNC', { bg = 'NONE', ctermbg = 'NONE' })
-    vim.api.nvim_set_hl(0, 'SignColumn', { bg = 'NONE', ctermbg = 'NONE' })
-    vim.api.nvim_set_hl(0, 'EndOfBuffer', { bg = 'NONE', ctermbg = 'NONE' })
-    -- Gitsigns: ensure colored signs are visible with transparent bg
-    vim.api.nvim_set_hl(0, 'GitSignsAdd', { fg = '#b8e6a0', bg = 'NONE' })
-    vim.api.nvim_set_hl(0, 'GitSignsChange', { fg = '#a8c8ff', bg = 'NONE' })
-    vim.api.nvim_set_hl(0, 'GitSignsDelete', { fg = '#ff9ea8', bg = 'NONE' })
-    -- Line numbers: brighter for visibility on transparent bg
-    vim.api.nvim_set_hl(0, 'LineNr', { fg = '#8893a8', bg = 'NONE' })
-    vim.api.nvim_set_hl(0, 'CursorLineNr', { fg = '#e0e0e0', bold = true, bg = 'NONE' })
-    -- Neo-tree specific transparency
-    vim.api.nvim_set_hl(0, 'NeoTreeNormal', { bg = 'NONE', ctermbg = 'NONE' })
-    vim.api.nvim_set_hl(0, 'NeoTreeNormalNC', { bg = 'NONE', ctermbg = 'NONE' })
-    vim.api.nvim_set_hl(0, 'NeoTreeEndOfBuffer', { bg = 'NONE', ctermbg = 'NONE' })
+local function custom_highlights()
+  local none = { bg = 'NONE', ctermbg = 'NONE' }
+  for _, group in ipairs { 'Normal', 'NormalFloat', 'NormalNC', 'SignColumn', 'EndOfBuffer', 'NeoTreeNormal', 'NeoTreeNormalNC', 'NeoTreeEndOfBuffer' } do
+    vim.api.nvim_set_hl(0, group, none)
+  end
+  vim.api.nvim_set_hl(0, 'GitSignsAdd', { fg = '#b8e6a0', bg = 'NONE' })
+  vim.api.nvim_set_hl(0, 'GitSignsChange', { fg = '#a8c8ff', bg = 'NONE' })
+  vim.api.nvim_set_hl(0, 'GitSignsDelete', { fg = '#ff9ea8', bg = 'NONE' })
+  vim.api.nvim_set_hl(0, 'LineNr', { fg = '#8893a8', bg = 'NONE' })
+  vim.api.nvim_set_hl(0, 'CursorLineNr', { fg = '#e0e0e0', bold = true, bg = 'NONE' })
+end
+vim.api.nvim_create_autocmd('ColorScheme', { callback = custom_highlights })
+-- the colorscheme is applied in init.lua before this file loads
+custom_highlights()
+
+local function gh(repo) return 'https://github.com/' .. repo end
+
+-- tiktoken is built on install/update
+vim.api.nvim_create_autocmd('PackChanged', {
+  callback = function(ev)
+    if ev.data.spec.name == 'CopilotChat.nvim' and (ev.data.kind == 'install' or ev.data.kind == 'update') then
+      vim.system({ 'make', 'tiktoken' }, { cwd = ev.data.path }):wait()
+    end
   end,
 })
+vim.pack.add {
+  gh 'windwp/nvim-ts-autotag',
+  gh 'f-person/git-blame.nvim',
+  gh 'github/copilot.vim',
+  gh 'nvim-lua/plenary.nvim',
+  { src = gh 'CopilotC-Nvim/CopilotChat.nvim', version = 'main' },
+  gh 'nvim-tree/nvim-web-devicons',
+  gh 'nvim-lualine/lualine.nvim',
+}
 
-return {
-  -- Configure tokyonight to use transparent background
-  {
-    'folke/tokyonight.nvim',
-    opts = {
-      transparent = true, -- Enable transparent background
-      styles = {
-        sidebars = 'transparent', -- Transparent sidebars
-        floats = 'transparent', -- Transparent floating windows
-      },
-    },
-  },
+require('nvim-ts-autotag').setup {
+  opts = { enable_close = true, enable_rename = true, enable_close_on_slash = false },
+}
 
-  -- Don't auto-open Neo-tree at startup
-  {
-    'nvim-neo-tree/neo-tree.nvim',
-    lazy = true, -- Only load when explicitly called
-  },
+require('gitblame').setup {
+  enabled = true,
+  message_template = ' <summary> • <date> • <author> • <<sha>>',
+  date_format = '%m-%d-%Y %H:%M:%S',
+  virtual_text_column = 1,
+}
+vim.keymap.set('n', '<leader>bo', '<cmd>GitBlameOpenCommitURL<cr>', { desc = '[B]lame [O]pen commit in browser' })
+vim.keymap.set('n', '<leader>bc', '<cmd>GitBlameCopySHA<cr>', { desc = '[B]lame [C]opy SHA' })
+vim.keymap.set('n', '<leader>bs', '<cmd>GitBlameOpenFileURL<cr>', { desc = '[B]lame open file in browser' })
 
-  -- Auto-closing HTML/JSX tags
-  {
-    'windwp/nvim-ts-autotag',
-    event = 'InsertEnter',
-    dependencies = { 'nvim-treesitter/nvim-treesitter' },
-    config = function()
-      require('nvim-ts-autotag').setup {
-        opts = {
-          -- Defaults
-          enable_close = true, -- Auto close tags
-          enable_rename = true, -- Auto rename pairs of tags
-          enable_close_on_slash = false, -- Auto close on trailing </
-        },
-      }
-    end,
-  },
+require('CopilotChat').setup {}
 
-  -- Git blame annotations
-  {
-    'f-person/git-blame.nvim',
-    event = 'VeryLazy',
-    keys = {
-      { '<leader>bo', '<cmd>GitBlameOpenCommitURL<cr>', desc = '[B]lame [O]pen commit in browser' },
-      { '<leader>bc', '<cmd>GitBlameCopySHA<cr>', desc = '[B]lame [C]opy SHA' },
-      { '<leader>bs', '<cmd>GitBlameOpenFileURL<cr>', desc = '[B]lame open file in browser' },
-    },
-    opts = {
-      enabled = true,
-      message_template = ' <summary> • <date> • <author> • <<sha>>',
-      date_format = '%m-%d-%Y %H:%M:%S',
-      virtual_text_column = 1,
-    },
-  },
-
-  -- GitHub Copilot
-  {
-    'github/copilot.vim',
-    lazy = false,
-  },
-
-  -- GitHub Copilot Chat
-  {
-    'CopilotC-Nvim/CopilotChat.nvim',
-    dependencies = {
-      { 'nvim-lua/plenary.nvim', branch = 'master' },
-    },
-    build = 'make tiktoken',
-    opts = {},
-  },
-
-  -- Statusline
-  {
-    'nvim-lualine/lualine.nvim',
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
-    opts = {
-      options = {
-        theme = 'tokyonight', -- or 'auto' to match your colorscheme
-        component_separators = { left = '', right = '' },
-        section_separators = { left = '', right = '' },
-      },
-    },
+require('lualine').setup {
+  options = {
+    theme = 'tokyonight',
+    component_separators = { left = '', right = '' },
+    section_separators = { left = '', right = '' },
   },
 }
