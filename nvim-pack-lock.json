@@ -51,17 +51,13 @@
       "rev": "f1e186e44d3b7f9ae918008e2c28ce37c6023d2d",
       "src": "https://github.com/lukas-reineke/indent-blankline.nvim"
     },
-    "live-server.nvim": {
+    "kitehost.nvim": {
       "rev": "4cb5c94a84cc653e0b32e0c9aed95465a36fc94d",
-      "src": "https://github.com/selimacerbas/live-server.nvim"
+      "src": "https://github.com/selimacerbas/kitehost.nvim"
     },
     "lualine.nvim": {
       "rev": "221ce6b2d999187044529f49da6554a92f740a96",
       "src": "https://github.com/nvim-lualine/lualine.nvim"
-    },
-    "markdown-preview.nvim": {
-      "rev": "dded03dc6cce87364b48260b2ffbace575a6add7",
-      "src": "https://github.com/selimacerbas/markdown-preview.nvim"
     },
     "mason-lspconfig.nvim": {
       "rev": "55eceab8975036ac43a4176cbfe0d4bf1ddae93f",
@@ -78,6 +74,10 @@
     "mason.nvim": {
       "rev": "2a6940af80375532e5e9e7c1f2fc6319a1b7a69d",
       "src": "https://github.com/mason-org/mason.nvim"
+    },
+    "mdkite.nvim": {
+      "rev": "dded03dc6cce87364b48260b2ffbace575a6add7",
+      "src": "https://github.com/selimacerbas/mdkite.nvim"
     },
     "mini.nvim": {
       "rev": "f9ac12d7cbd2563cfc2cce9a8152fc8df2ad0d6f",
