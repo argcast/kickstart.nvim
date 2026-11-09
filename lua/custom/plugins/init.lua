@@ -111,4 +111,17 @@ return {
     build = 'make tiktoken',
     opts = {},
   },
+
+  -- Statusline
+  {
+    'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    opts = {
+      options = {
+        theme = 'tokyonight', -- or 'auto' to match your colorscheme
+        component_separators = { left = '', right = '' },
+        section_separators = { left = '', right = '' },
+      },
+    },
+  },
 }
