@@ -1,3 +1,9 @@
+-- Load every other file in this directory (order unspecified).
+local plugins_dir = vim.fs.joinpath(vim.fn.stdpath 'config', 'lua', 'custom', 'plugins')
+for file_name, type in vim.fs.dir(plugins_dir, { follow = true }) do
+  if (type == 'file' or type == 'link') and file_name:match '%.lua$' and file_name ~= 'init.lua' then require('custom.plugins.' .. file_name:gsub('%.lua$', '')) end
+end
+
 vim.keymap.set('i', 'jk', '<Esc>', { desc = 'Exit insert mode easily' })
 
 -- Reload files changed externally (e.g. by Claude Code, git)
