@@ -32,6 +32,11 @@ require('diffview').setup {
 }
 
 vim.keymap.set('n', '<leader>gd', '<cmd>DiffviewOpen<cr>', { desc = '[G]it [D]iff view' })
+vim.keymap.set('n', '<leader>gm', function()
+  local base = vim.trim(vim.fn.system { 'git', 'rev-parse', '--abbrev-ref', 'origin/HEAD' })
+  if vim.v.shell_error ~= 0 then base = 'origin/main' end
+  vim.cmd('DiffviewOpen ' .. base .. '...HEAD')
+end, { desc = '[G]it diff vs [M]ain (PR view)' })
 vim.keymap.set('n', '<leader>gf', '<cmd>DiffviewFileHistory %<cr>', { desc = '[G]it [F]ile history (current)' })
 vim.keymap.set('n', '<leader>gF', '<cmd>DiffviewFileHistory<cr>', { desc = '[G]it [F]ile history (repo)' })
 vim.keymap.set('n', '<leader>gx', '<cmd>DiffviewClose<cr>', { desc = '[G]it diff close' })
